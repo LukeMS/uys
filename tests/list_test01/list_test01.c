@@ -4,7 +4,7 @@
 
 #include "list.h"
 
-#define TEST_SIZE 10000
+#define TEST_SIZE 100
 
 typedef struct ListData {
     int val;
@@ -68,7 +68,7 @@ int main(void) {
     free(list);
 
 
-    for (int i = 0; i < TEST_SIZE; ++i) {
+    for (int i = 0; i < TEST_SIZE * 2; ++i) {
         list = malloc(sizeof(*list));
         list_init(list, free);
         ListData *data = malloc(sizeof(*data));

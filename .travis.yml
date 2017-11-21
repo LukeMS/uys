@@ -14,9 +14,13 @@ addons:
 
 
 install:
-  - sudo make install gcov test --file=linux.makefile
+  - cd $TRAVIS_BUILD_DIR && sudo make --file=linux.makefile install gcov
+
+script:
+  - cd $TRAVIS_BUILD_DIR && make --file=linux.makefile test
 
 after_success:
+  - cd $TRAVIS_BUILD_DIR
   - bash <(curl -s https://codecov.io/bash)
   - cd $TRAVIS_BUILD_DIR/docs
   - ( cat ./Doxyfile ; echo "PROJECT_NUMBER=0.1" ) | doxygen -
