@@ -1,5 +1,11 @@
-UYS - Useful Yet Simple C libraries collection
-=============================================
+UYS - Useful Yet Simple C libraries collection |travisci_badge|_ |codecov_badge|_ 
+===========================================================
+
+.. |travisci_badge| image:: https://travis-ci.org/LukeMS/uys.svg?branch=master
+.. _travisci_badge: https://travis-ci.org/LukeMS/uys
+
+.. |codecov_badge| image:: https://codecov.io/gh/LukeMS/uys/branch/master/graph/badge.svg
+.. _codecov_badge: https://codecov.io/gh/LukeMS/uys
 
 A C library (or collection of small modules and other libraries) with some useful data types and functions. 
 It includes some content created by me but also integrates existing libraries from external sources (why reinvent the wheel, right?).
