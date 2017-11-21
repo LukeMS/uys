@@ -1,5 +1,6 @@
-UYS - Useful Yet Simple C libraries collection |travisci_badge|_ |codecov_badge|_ 
+UYS - Useful Yet Simple (C libraries collection)
 ===========================================================
+|travisci_badge|_ |codecov_badge|_ 
 
 .. |travisci_badge| image:: https://travis-ci.org/LukeMS/uys.svg?branch=master
 .. _travisci_badge: https://travis-ci.org/LukeMS/uys
@@ -16,6 +17,7 @@ The collection, as a whole, has the goals of being:
 * Well documented (documentation should cover both original libraries and the incorporated ones);
 * Well tested (tests should cover both original libraries and the incorporated ones);
 * Cohesive (both original libraries and the incorporated ones should have a similar API and look and, to achieve that, modifications are made on the latter when necessary);
+* Portable: at least for Windows (used/tested during development itself) and Linux (compiled/tested via Travis CI);
 
 The 3rd party / existing libraries incorporated are listed below:
 

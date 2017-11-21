@@ -5,7 +5,8 @@ git-commit.bat
 obj
 bin
 lib
-sample.dox
+Doxyfile_old.bkp
+Doxyfile_site.bkp
 
 # Prerequisites
 *.d
