@@ -44,6 +44,9 @@ uninstall:
 gcov:
 	gcc -shared $(LDIR) $(CFLAGS) -fPIC -O0 -fprofile-arcs -ftest-coverage $(SDIR)/*.c -lgcov -o /usr/lib/$(uys)
 
+test:
+	make -C $(CURDIR)/tests/list_test01 --file=$(CURDIR)/linux_test.makefile valgrind
+
 
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)

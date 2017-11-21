@@ -6,6 +6,9 @@ _TARGET := $(basename $(notdir $(realpath $(lastword $(_MAKEFILE_ABS)))))
 _CWD = $(_MAKEFILE_ABS)
 .DEFAULT_GOAL = lib
 $(info target->$(_TARGET) makefile_abs->$(_MAKEFILE_ABS) cwd->$(_MAKEFILE_ABS))
+$(info target->$(_TARGET) makefile_abs->$(_MAKEFILE_ABS) cwd->$(_MAKEFILE_ABS))
+$(info .VARIABLES->[$(.VARIABLES)])
+$(info CURDIR->[$(CURDIR)])
 
 
 IDIR = include

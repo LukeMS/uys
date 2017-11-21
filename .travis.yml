@@ -14,10 +14,7 @@ addons:
 
 
 install:
-  - sudo make install gcov --file=linux.makefile
-
-script:
-  - cd $TRAVIS_BUILD_DIR/tests/list_test01 && cp -f ../../linux_test.makefile ./makefile && make valgrind
+  - sudo make install gcov test --file=linux.makefile
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
