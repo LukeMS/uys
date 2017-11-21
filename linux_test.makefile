@@ -9,7 +9,7 @@ SDIR = .
 IDIR = -I/usr/include/uys
 LDIR = -L/usr/lib/
 LIBS = -luys -lgcov
-CFLAGS = -Wall -W -ggdb -std=c99 -fPIC -O0 -fprofile-arcs -ftest-coverage
+CFLAGS = -Wall -W -ggdb -std=c99 -fPIC -O0
 
 
 _OBJS := $(patsubst %.c,%.o,$(wildcard *.c))

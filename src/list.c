@@ -76,11 +76,9 @@ int list_ins_next(List *list, ListElmt *element, const void *data) {
     ListElmt           *new_element;
 
     /****************************************************************
-    *  Allocate storage for the element.
+    *  Allocate storage for the element, return -1 if it fails
     ****************************************************************/
-    if ((new_element = (ListElmt *)malloc(sizeof(ListElmt))) == NULL) {
-       return -1;
-    }
+    if (!(new_element = (ListElmt *)malloc(sizeof(ListElmt)))) return -1;
 
     /*****************************************************************
     *  Insert the element into the list.

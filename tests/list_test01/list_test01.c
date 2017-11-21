@@ -4,7 +4,7 @@
 
 #include "list.h"
 
-#define TEST_SIZE 32000
+#define TEST_SIZE 10000
 
 typedef struct ListData {
     int val;
@@ -21,9 +21,7 @@ int main(void) {
         /*****************************************************************
          * insertion at tail
          ****************************************************************/
-        if (list_ins_next(list, list_tail(list), data)) {
-            exit(EXIT_FAILURE);
-        }
+        assert(list_ins_next(list, list_tail(list), data) == 0);
         assert(list_size(list) == i + 1);
         assert(((ListData*)(( list_tail(list))->data))->val == i);
     }
@@ -35,9 +33,7 @@ int main(void) {
         /*****************************************************************
          * removal at head
          ****************************************************************/
-        if (list_rem_next(list, NULL, (void**)&data)) {
-            exit(EXIT_FAILURE);
-        }
+        assert(list_rem_next(list, NULL, (void**)&data) == 0);
         assert(data->val == i);
         free(data);
     }
@@ -52,9 +48,7 @@ int main(void) {
         /*****************************************************************
          * insertion at head
          ****************************************************************/
-        if (list_ins_next(list, NULL, data)) {
-            exit(EXIT_FAILURE);
-        }
+        assert(list_ins_next(list, NULL, data) == 0);
         assert(list_size(list) == i + 1);
         assert(((ListData*)(( list_head(list))->data))->val == i);
     }
@@ -66,14 +60,53 @@ int main(void) {
         /*****************************************************************
          * removal at head
          ****************************************************************/
-        if (list_rem_next(list, NULL, (void**)&data)) {
-            exit(EXIT_FAILURE);
-        }
+        assert(list_rem_next(list, NULL, (void**)&data) == 0);
         assert(data->val == i);
         free(data);
     }
     list_destroy(list);
     free(list);
+
+
+    for (int i = 0; i < TEST_SIZE; ++i) {
+        list = malloc(sizeof(*list));
+        list_init(list, free);
+        ListData *data = malloc(sizeof(*data));
+
+        /*****************************************************************
+         * test (failure): removal on empty list
+         ****************************************************************/
+        assert(list_rem_next(list, NULL, (void**)&data) == -1);
+        assert(data);
+        data->val = 9;
+        assert(list_ins_next(list, NULL, data) == 0);
+
+        /*****************************************************************
+         * test (failure): list_rem_next on tail
+         ****************************************************************/
+        assert(list_rem_next(list, list_tail(list), (void**)&data) == -1);
+
+        /*****************************************************************
+         * test: removal from middle of list
+         ****************************************************************/
+        ListData *datb = malloc(sizeof(*datb));
+        datb->val = 7;
+        assert(list_ins_next(list, list_tail(list), datb) == 0);
+        ListData *datc = malloc(sizeof(*datc));
+        datc->val = 8;
+        assert(list_ins_next(list, list_tail(list), datc) == 0);
+        ListData *tmp;
+        ListElmt *second = list_next(list_head(list));
+        assert(list_rem_next(list, second, (void**)&tmp) == 0);
+        assert(tmp->val == datc->val);
+        free(datc);
+        /*****************************************************************
+         * test: destruction of non-empty list
+         ****************************************************************/
+        list_destroy(list);
+        data = NULL;
+        free(list);
+    }
 
     return 0;
 }
