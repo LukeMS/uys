@@ -1,0 +1,9 @@
+language: c
+before_install:
+  - sudo apt-get install valgrind
+install:
+  - sudo make install gcov --file=linux.makefile
+script:
+  - cd ./tests/list_test01 && cp -f ../../linux_test.makefile ./makefile && make valgrind && cd .. 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

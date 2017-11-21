@@ -1,3 +1,11 @@
+*.sublime-project
+*.sublime-workspace
+*.gcno
+git-commit.bat
+obj
+bin
+lib
+
 # Prerequisites
 *.d
 
