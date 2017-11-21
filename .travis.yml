@@ -1,9 +1,38 @@
 language: c
-before_install:
-  - sudo apt-get install valgrind
+
+
+# Install dependencies
+addons:
+  apt:
+    packages:
+      - doxygen        # for documentation only
+      - doxygen-doc    # for documentation only
+      - doxygen-latex  # for documentation only
+      - doxygen-gui    # for documentation only
+      - graphviz       # for documentation only
+      - valgrind       # for testing only
+
+
 install:
   - sudo make install gcov --file=linux.makefile
+
 script:
   - cd ./tests/list_test01 && cp -f ../../linux_test.makefile ./makefile && make valgrind && cd .. 
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - cd $TRAVIS_BUILD_DIR/docs
+  - ( cat ./Doxyfile ; echo "PROJECT_NUMBER=0.1" ) | doxygen -
+  - ls -a
+  - ls -a ./html
+  - ls -a $TRAVIS_BUILD_DIR/docs
+
+# Deploy using travis builtin GitHub Pages support
+deploy:
+  provider: pages
+  # target_branch: gh-pages # Branch to force push to, defaults to gh-pages
+  skip_cleanup: true
+  local_dir: $TRAVIS_BUILD_DIR/docs/html
+  github_token: $GITHUB_API_KEY
+  on:
+    branch: master

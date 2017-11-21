@@ -5,6 +5,7 @@ git-commit.bat
 obj
 bin
 lib
+sample.dox
 
 # Prerequisites
 *.d
