@@ -22,6 +22,19 @@
 #include "list.h"
 
 
+#include <stdio.h>
+int UYS_MAKE_MALLOC_FAIL = 0;
+void* uys_malloc_test_fn(size_t size) {
+    if (UYS_MAKE_MALLOC_FAIL)
+        return NULL;
+    return malloc(size);
+}
+
+void uys_set_malloc_to_fail(int status) {
+    UYS_MAKE_MALLOC_FAIL = status;
+}
+
+
 /*************************************************************//**
  * list_init
  ****************************************************************/
@@ -78,7 +91,9 @@ int list_ins_next(List *list, ListElmt *element, const void *data) {
     /****************************************************************
     *  Allocate storage for the element, return -1 if it fails
     ****************************************************************/
-    if (!(new_element = (ListElmt *)malloc(sizeof(ListElmt)))) return -1;
+    if ((new_element = (ListElmt *)malloc(sizeof(ListElmt))) == NULL) {
+       return -1;
+    }
 
     /*****************************************************************
     *  Insert the element into the list.

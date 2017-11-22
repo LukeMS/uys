@@ -12,8 +12,10 @@ typedef struct ListData {
 
 int main(void) {
     List *list;
-
     list = malloc(sizeof(*list));
+    assert(list != NULL);
+
+
     list_init(list, free);
     for (int i = 0; i < TEST_SIZE; ++i) {
         ListData *data = malloc(sizeof(*data));
@@ -106,7 +108,16 @@ int main(void) {
         list_destroy(list);
         data = NULL;
         free(list);
-    }
 
-    return 0;
+        /*****************************************************************
+         * test: list->destroy == NULL
+         ****************************************************************/
+        list = malloc(sizeof(*list));
+        list_init(list, NULL);
+        data = malloc(sizeof(*data));
+        assert(list_ins_next(list, NULL, data) == 0);
+        list_destroy(list);
+        free(list);
+        free(data);
+    }
 }

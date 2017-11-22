@@ -5,15 +5,15 @@ _TARGET := $(basename $(notdir $(realpath $(lastword $(CURDIR)))))
 
 
 BDIR = .
-IDIR = include
-INC = -I../../include
+IDIR = ../../include
+INC = -I$(IDIR)
 LDIR = ../../lib
 LIB = -L$(LDIR)
 LIBS = $(LDIR)/libuys.a
 LIBS_SHORT = -luys
 ODIR = obj
 SDIR = .
-CFLAGS = -static -Wall -W -ggdb -std=c99 $(INC)
+CFLAGS = -DUYS_TEST_MALLOC=1 -static -Wall -W -ggdb -std=c99 $(INC)
 
 
 # https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
@@ -30,7 +30,7 @@ _dummy := $(shell mkdir -p "$(ODIR)" "$(BDIR)")
 
 $(info target=$(_TARGET), SRCS=[$(SRCS)], OBJS=[$(OBJS)])
 
-all: $(OBJS) libuys.a
+all: $(OBJS)
 	gcc $(OBJS) $(LIB) $(LIBS_SHORT) -o $(BDIR)/$(_TARGET)
 
 
@@ -42,18 +42,15 @@ rundrm: all
 	C:/dr_m/bin/drmemory -batch -- ./$(BDIR)/$(_TARGET).exe
 
 
-libuys.a:
-	make -C ../.. --file=makefile lib
-
-
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)
 
 
 # compile and generate dependency info
-$(ODIR)/%.o: $(SDIR)/%.c $(SDIR)/%.c
+$(ODIR)/%.o: $(SDIR)/%.c
+	make -C ../.. lib
 	gcc -c $(CFLAGS) $(SDIR)/$*.c -o $(ODIR)/$*.o
-	gcc -MM $(CFLAGS) $(SDIR)/$*.c > $(ODIR)/$*.d
+	( echo -n $(ODIR)/ ; echo -n `gcc -MM $(CFLAGS) $(SDIR)/$*.c` ; echo -n " " ; echo -n $(LIBS) ) | tee $(ODIR)/$*.d
 
 
 # remove compilation products

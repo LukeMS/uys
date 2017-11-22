@@ -5,7 +5,7 @@ IDIR = include
 INC = -I$(IDIR)
 ODIR = obj
 SDIR = src
-CFLAGS = -Wall -W -ggdb -std=c99 $(INC)
+CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -ggdb -std=c99 $(INC)
 
 
 ifeq ($(DEST),)

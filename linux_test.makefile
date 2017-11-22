@@ -11,7 +11,7 @@ SDIR = $(CURDIR)
 IDIR = -I/usr/include/uys
 LDIR = -L/usr/lib/
 LIBS = -luys -lgcov
-CFLAGS = -Wall -W -ggdb -std=c99 -fPIC -O0
+CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -ggdb -std=c99 -fPIC -O0
 
 
 SRCS := $(wildcard $(SDIR)/*.c)
