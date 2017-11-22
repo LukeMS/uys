@@ -76,6 +76,10 @@ int main(void) {
         list = malloc(sizeof(*list));
         list_init(list, free);
         ListData *data = malloc(sizeof(*data));
+        ListData *datb;
+        ListData *datc;
+        ListData *tmp;
+        ListElmt *second;
 
         /*****************************************************************
          * test (failure): removal on empty list
@@ -98,20 +102,37 @@ int main(void) {
          * test (failure): list_rem_next on tail
          ****************************************************************/
         assert(list_rem_next(list, list_tail(list), (void**)&data) == -1);
+        list_destroy(list);
+        free(list);
 
         /*****************************************************************
          * test: removal from middle of list
          ****************************************************************/
-        ListData *datb = malloc(sizeof(*datb));
+        list = malloc(sizeof(*list));
+        list_init(list, free);
+        assert(list_is_empty(list));
+        data = malloc(sizeof(*data));
+        datb = malloc(sizeof(*datb));
+        datc = malloc(sizeof(*datc));
+        data->val = 6;
         datb->val = 7;
-        assert(list_ins_next(list, list_tail(list), datb) == 0);
-        ListData *datc = malloc(sizeof(*datc));
         datc->val = 8;
+        // insert at tail
+        assert(list_ins_next(list, list_tail(list), data) == 0);
+        assert(((ListData*)(list_tail(list)->data))->val == data->val);
+        // insert at tail
+        assert(list_ins_next(list, list_tail(list), datb) == 0);
+        assert(((ListData*)(list_tail(list)->data))->val == datb->val);
+        // insert at tail
         assert(list_ins_next(list, list_tail(list), datc) == 0);
-        ListData *tmp;
-        ListElmt *second = list_next(list_head(list));
+        assert(((ListData*)(list_tail(list)->data))->val == datc->val);
+        // get second element
+        second = list_next(list_head(list));
+        assert(((ListData*)(second->data))->val == datb->val);
+        // remove third element
+        tmp = NULL;
         assert(list_rem_next(list, second, (void**)&tmp) == 0);
-        assert(tmp->val == datc->val);
+        assert(tmp && tmp->val == datc->val);
         free(datc);
         /*****************************************************************
          * test: destruction of non-empty list
@@ -119,6 +140,7 @@ int main(void) {
         list_destroy(list);
         data = NULL;
         free(list);
+
 
         /*****************************************************************
          * test: list->destroy == NULL

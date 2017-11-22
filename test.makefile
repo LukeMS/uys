@@ -10,10 +10,12 @@ INC = -I$(IDIR)
 LDIR = ../../lib
 LIB = -L$(LDIR)
 LIBS = $(LDIR)/libuys.a
+DLL = $(LDIR)/libuys.dll
 LIBS_SHORT = -luys
 ODIR = obj
 SDIR = .
-CFLAGS = -DUYS_TEST_MALLOC=1 -static -Wall -W -ggdb -std=c99 $(INC)
+CFLAGS = -DUYS_TEST_MALLOC=1 -static -Wall -W -Werror=implicit-function-declaration -ggdb -std=c99 $(INC)
+GCOVFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -Werror=implicit-function-declaration -ggdb -std=c99 -fPIC -O0 $(INC)
 
 
 # https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
@@ -37,6 +39,14 @@ all: $(OBJS)
 run: all
 	$(BDIR)/$(_TARGET).exe  || gdb -batch -ex "run" -ex "bt full" $(BDIR)/$(_TARGET).exe 2>&1
 
+build-gcov:
+	gcc $(INC) $(LIB) $(CFLAGS) $(SRCS) $(DLL) -lgcov -o $(BDIR)/$(_TARGET)
+
+run-gcov: build-gcov
+	cp $(DLL) ./
+	$(BDIR)/$(_TARGET).exe  || gdb -batch -ex "run" -ex "bt full" $(BDIR)/$(_TARGET).exe 2>&1
+	rm ./*.dll
+
 
 rundrm: all
 	C:/dr_m/bin/drmemory -batch -- ./$(BDIR)/$(_TARGET).exe
@@ -52,10 +62,6 @@ lib:
 $(ODIR)/%.o: lib $(SDIR)/%.c
 	gcc -c $(CFLAGS) $(SDIR)/$*.c -o $(ODIR)/$*.o
 	( echo -n $(ODIR)/ ; echo -n `gcc -MM $(CFLAGS) $(SDIR)/$*.c` ; echo -n " " ; echo -n $(LIBS) ) | tr -d '\\\r' > $(ODIR)/$*.d
-#	tr -d '\n' $(ODIR)/$*.d
-#	tr '\n' ' ' $(ODIR)/$*.d
-#sed 'N;s/[\\n\r]//g' $(ODIR)/$*.d
-#sed 'N;s/.\n//' $(ODIR)/$*.d
 
 
 # remove compilation products

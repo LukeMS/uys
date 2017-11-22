@@ -5,7 +5,7 @@ IDIR = include
 INC = -I$(IDIR)
 ODIR = obj
 SDIR = src
-CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -ggdb -std=c99 $(INC)
+CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -Werror=implicit-function-declaration -ggdb -std=c99 $(INC)
 
 
 ifeq ($(DEST),)
@@ -43,11 +43,12 @@ uninstall:
 
 
 gcov:
-	gcc -shared $(LDIR) $(CFLAGS) -fPIC -O0 -fprofile-arcs -ftest-coverage $(SDIR)/*.c -lgcov -o /usr/lib/$(uys)
+	gcc -shared $(CFLAGS) -fPIC -O0 -fprofile-arcs -ftest-coverage $(SDIR)/*.c -lgcov -o /usr/lib/$(uys)
 
-#All test folders as dependencies
-test: $(TESTS)
-	$(foreach (var1), $(TESTS), make -C $(var1) --file=$(CURDIR)/linux_test.makefile valgrind;)
+
+#run all tests by passing their path to recursive make calls
+test:
+	for dir in $(TESTS); do make -C $$dir --file=$(CURDIR)/linux_test.makefile valgrind; done
 
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)

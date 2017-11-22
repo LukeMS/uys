@@ -1,6 +1,7 @@
 _TARGET := $(basename $(notdir $(realpath $(lastword $(CURDIR)))))
 EXE = $(_TARGET).exe
 
+
 $(info PATH->[$(CURDIR)])
 $(info _TARGET->[$(_TARGET)])
 
@@ -11,7 +12,7 @@ SDIR = $(CURDIR)
 IDIR = -I/usr/include/uys
 LDIR = -L/usr/lib/
 LIBS = -luys -lgcov
-CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -ggdb -std=c99 -fPIC -O0
+CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -Werror=implicit-function-declaration -ggdb -std=c99 -fPIC -O0
 
 
 SRCS := $(wildcard $(SDIR)/*.c)

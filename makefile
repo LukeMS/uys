@@ -16,7 +16,7 @@ IDIR = include
 INC = -I$(IDIR)
 ODIR = obj
 SDIR = src
-CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -ggdb -std=c99 $(INC)
+CFLAGS = -DUYS_TEST_MALLOC=1 -Wall -W -Werror=implicit-function-declaration -ggdb -std=c99 $(INC)
 
 
 ifeq ($(DEST),)
@@ -40,6 +40,19 @@ _dummy := $(shell mkdir -p "$(ODIR)" "$(DEST)")
 # link
 lib: $(OBJS)
 	ar -cvqs $(DEST)/lib$(_TARGET).a $(OBJS)
+
+gcov:
+	gcc -shared $(INC) $(CFLAGS) -fPIC -O0 -fprofile-arcs -ftest-coverage $(SRCS) -lgcov -o $(DEST)/lib$(_TARGET).dll
+
+#run all tests by passing their path to recursive make calls
+test: gcov
+	for dir in $(TESTS); do make -C $$dir --file=$(CURDIR)/test.makefile run-gcov; done
+	mv -f *.gcno $(SDIR)/
+	mv -f *.gcda $(SDIR)/
+	gcov $(SRCS)
+	lcov --capture --directory . --output-file $(SDIR)/coverage.info
+	genhtml $(SDIR)/coverage.info --output-directory ./docs/coverage
+	#mv -f $(SDIR)/coverage.info ./docs/html/coverage
 
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)

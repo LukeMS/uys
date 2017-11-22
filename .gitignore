@@ -1,12 +1,14 @@
 *.sublime-project
 *.sublime-workspace
 *.gcno
+*.gcda
 git-commit.bat
 obj
 bin
 lib
-Doxyfile_old.bkp
-Doxyfile_site.bkp
+*.bkp
+docs/coverage
+coverage.info
 
 # Prerequisites
 *.d

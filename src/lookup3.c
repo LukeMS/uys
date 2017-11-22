@@ -69,6 +69,8 @@ on 1 byte), but shoehorning those bytes into integers efficiently is messy.
 #define hashmask(n) (hashsize(n)-1)
 #define rot(x,k) (((x)<<(k)) | ((x)>>(32-(k))))
 
+
+
 /*
 -------------------------------------------------------------------------------
 mix -- mix 3 32-bit values reversibly.
@@ -123,6 +125,8 @@ rotates.
   c -= b;  c ^= rot(b, 4);  b += a; \
 }
 
+
+
 /*
 -------------------------------------------------------------------------------
 final -- final mixing of 3 32-bit values (a,b,c) into c
@@ -159,30 +163,33 @@ and these came close:
   c ^= b; c -= rot(b,24); \
 }
 
-/*
---------------------------------------------------------------------
- This works on all machines.  To be useful, it requires
- -- that the key be an array of uint32_t's, and
- -- that the length be the number of uint32_t's in the key
 
- The function hashword() is identical to hashlittle() on little-endian
- machines, and identical to hashbig() on big-endian machines,
- except that the length has to be measured in uint32_ts rather than in
- bytes.  hashlittle() is more complicated than hashword() only because
- hashlittle() has to dance around fitting the key bytes into registers.
---------------------------------------------------------------------
-*/
-uint32_t hashword(
-const uint32_t *k,                   /* the key, an array of uint32_t values */
-size_t          length,               /* the length of the key, in uint32_ts */
-uint32_t        initval)         /* the previous hash, or an arbitrary value */
-{
+
+/*****************************************************************
+ * hashword
+ ****************************************************************/
+/*****************************************************************
+ * This works on all machines. To be useful, it requires:
+ * -- that the key be an array of uint32_t's, and
+ * -- that the length be the number of uint32_t's in the key
+ *
+ * The function hashword() is identical to hashlittle() on little-endian
+ * machines, and identical to hashbig() on big-endian machines,
+ * except that the length has to be measured in uint32_ts rather than in
+ * bytes.  hashlittle() is more complicated than hashword() only because
+ * hashlittle() has to dance around fitting the key bytes into registers.
+ *
+ * \param k the key, an array of uint32_t values.
+ * \param length the length of the key, in uint32_ts
+ * \param initval the previous hash, or an arbitrary value
+ ****************************************************************/
+/*  NOTE: COMMENT IT OUT
+uint32_t hashword(const uint32_t *k, size_t length, uint32_t initval) {
   uint32_t a,b,c;
-
-  /* Set up the internal state */
+  // Set up the internal state
   a = b = c = 0xdeadbeef + (((uint32_t)length)<<2) + initval;
 
-  /*------------------------------------------------- handle most of the key */
+  //------------------------------------------------- handle most of the key
   while (length > 3)
   {
     a += k[0];
@@ -193,46 +200,50 @@ uint32_t        initval)         /* the previous hash, or an arbitrary value */
     k += 3;
   }
 
-  /*------------------------------------------- handle the last 3 uint32_t's */
+  //------------------------------------------- handle the last 3 uint32_t's
 
   switch(length)
   {
-  /*****************************************************************
-   * NOTE: ALL THE CASE STATEMENTS DO FALL THROUGH
-   ****************************************************************/
+   // *****************************************************************
+   // * NOTE: ALL THE CASE STATEMENTS DO FALL THROUGH
+   // ****************************************************************
   case 3 : c+=k[2];
   case 2 : b+=k[1];
   case 1 : a+=k[0];
     final(a,b,c);
-  case 0:     /* case 0: nothing left to add */
+  case 0:     // case 0: nothing left to add
     break;
   }
-  /*------------------------------------------------------ report the result */
+  //------------------------------------------------------ report the result
   return c;
 }
-
-
-/*
---------------------------------------------------------------------
-hashword2() -- same as hashword(), but take two seeds and return two
-32-bit values.  pc and pb must both be nonnull, and *pc and *pb must
-both be initialized with seeds.  If you pass in (*pb)==0, the output
-(*pc) will be the same as the return value from hashword().
---------------------------------------------------------------------
 */
-void hashword2 (
-const uint32_t *k,                   /* the key, an array of uint32_t values */
-size_t          length,               /* the length of the key, in uint32_ts */
-uint32_t       *pc,                      /* IN: seed OUT: primary hash value */
-uint32_t       *pb)               /* IN: more seed OUT: secondary hash value */
-{
+
+
+
+/*****************************************************************
+ * hashword2
+ ****************************************************************/
+/*****************************************************************
+ * same as hashword(), but take two seeds and return two 32-bit values.  pc
+ * and pb must both be nonnull, and *pc and *pb must both be initialized with
+ * seeds.  If you pass in (*pb)==0, the output (*pc) will be the same as the
+ * return value from hashword().
+ *
+ * \param k the key, an array of uint32_t values.
+ * \param length the length of the key.
+ * \param pc IN: seed OUT: primary hash value.
+ * \param pb IN: more seed OUT: secondary hash value
+ ****************************************************************/
+/*  NOTE: COMMENT IT OUT
+void hashword2 (const uint32_t *k, size_t length, uint32_t *pc, uint32_t *pb){
   uint32_t a,b,c;
 
-  /* Set up the internal state */
+  // Set up the internal state
   a = b = c = 0xdeadbeef + ((uint32_t)(length<<2)) + *pc;
   c += *pb;
 
-  /*------------------------------------------------- handle most of the key */
+  //------------------------------------------------- handle most of the key
   while (length > 3)
   {
     a += k[0];
@@ -243,22 +254,24 @@ uint32_t       *pb)               /* IN: more seed OUT: secondary hash value */
     k += 3;
   }
 
-  /*------------------------------------------- handle the last 3 uint32_t's */
+  //------------------------------------------- handle the last 3 uint32_t's
   switch(length)
   {
-  /*****************************************************************
-   * NOTE: ALL THE CASE STATEMENTS DO FALL THROUGH
-   ****************************************************************/
+   // *****************************************************************
+   // * NOTE: ALL THE CASE STATEMENTS DO FALL THROUGH
+   // ****************************************************************
   case 3 : c+=k[2];
   case 2 : b+=k[1];
   case 1 : a+=k[0];
     final(a,b,c);
-  case 0:     /* case 0: nothing left to add */
+  case 0:     // case 0: nothing left to add
     break;
   }
-  /*------------------------------------------------------ report the result */
+  //------------------------------------------------------ report the result
   *pc=c; *pb=b;
 }
+*/
+
 
 
 /*
@@ -287,7 +300,6 @@ Use for hash table lookup, or anything where one collision in 2^^32 is
 acceptable.  Do NOT use for cryptographic purposes.
 -------------------------------------------------------------------------------
 */
-
 uint32_t hashlittle( const void *key, size_t length, uint32_t initval)
 {
   uint32_t a,b,c;                                          /* internal state */
@@ -459,6 +471,7 @@ uint32_t hashlittle( const void *key, size_t length, uint32_t initval)
   final(a,b,c);
   return c;
 }
+
 
 
 /*
@@ -649,27 +662,29 @@ void hashlittle2(
 }
 
 
-
-/*
- * hashbig():
+/*****************************************************************
+ * hashbig
+ ****************************************************************/
+/*****************************************************************
  * This is the same as hashword() on big-endian machines.  It is different
  * from hashlittle() on all machines.  hashbig() takes advantage of
  * big-endian byte ordering.
- */
-uint32_t hashbig( const void *key, size_t length, uint32_t initval)
+ ****************************************************************/
+/*
+uint32_t hashbig(const void *key, size_t length, uint32_t initval)
 {
   uint32_t a,b,c;
-  union { const void *ptr; size_t i; } u; /* to cast key to (size_t) happily */
+  union { const void *ptr; size_t i; } u; // to cast key to (size_t) happily
 
-  /* Set up the internal state */
+  // Set up the internal state
   a = b = c = 0xdeadbeef + ((uint32_t)length) + initval;
 
   u.ptr = key;
   if (HASH_BIG_ENDIAN && ((u.i & 0x3) == 0)) {
-    const uint32_t *k = (const uint32_t *)key;         /* read 32-bit chunks */
+    const uint32_t *k = (const uint32_t *)key;         // read 32-bit chunks
     const uint8_t  *k8;
 
-    /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
+    //------ all but last block: aligned reads and affect 32 bits of (a,b,c)
     while (length > 12)
     {
       a += k[0];
@@ -680,16 +695,16 @@ uint32_t hashbig( const void *key, size_t length, uint32_t initval)
       k += 3;
     }
 
-    /*----------------------------- handle the last (probably partial) block */
-    /*
-     * "k[2]<<8" actually reads beyond the end of the string, but
-     * then shifts out the part it's not allowed to read.  Because the
-     * string is aligned, the illegal read is in the same word as the
-     * rest of the string.  Every machine with memory protection I've seen
-     * does it on word boundaries, so is OK with this.  But VALGRIND will
-     * still catch it and complain.  The masking trick does make the hash
-     * noticably faster for short strings (like English words).
-     */
+    //----------------------------- handle the last (probably partial) block
+    //  *
+    //  * "k[2]<<8" actually reads beyond the end of the string, but
+    //  * then shifts out the part it's not allowed to read.  Because the
+    //  * string is aligned, the illegal read is in the same word as the
+    //  * rest of the string.  Every machine with memory protection I've seen
+    //  * does it on word boundaries, so is OK with this.  But VALGRIND will
+    //  * still catch it and complain.  The masking trick does make the hash
+    //  * noticably faster for short strings (like English words).
+    //  *
 #ifndef VALGRIND
 
     switch(length)
@@ -706,37 +721,36 @@ uint32_t hashbig( const void *key, size_t length, uint32_t initval)
     case 3 : a+=k[0]&0xffffff00; break;
     case 2 : a+=k[0]&0xffff0000; break;
     case 1 : a+=k[0]&0xff000000; break;
-    case 0 : return c;              /* zero length strings require no mixing */
+    case 0 : return c;              // zero length strings require no mixing
     }
 
-#else  /* make valgrind happy */
+#else  // make valgrind happy
 
     k8 = (const uint8_t *)k;
-    switch(length)                   /* all the case statements fall through */
+    switch(length)                   // all the case statements fall through
     {
     case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
-    case 11: c+=((uint32_t)k8[10])<<8;  /* fall through */
-    case 10: c+=((uint32_t)k8[9])<<16;  /* fall through */
-    case 9 : c+=((uint32_t)k8[8])<<24;  /* fall through */
+    case 11: c+=((uint32_t)k8[10])<<8;  // fall through
+    case 10: c+=((uint32_t)k8[9])<<16;  // fall through
+    case 9 : c+=((uint32_t)k8[8])<<24;  // fall through
     case 8 : b+=k[1]; a+=k[0]; break;
-    case 7 : b+=((uint32_t)k8[6])<<8;   /* fall through */
-    case 6 : b+=((uint32_t)k8[5])<<16;  /* fall through */
-    case 5 : b+=((uint32_t)k8[4])<<24;  /* fall through */
+    case 7 : b+=((uint32_t)k8[6])<<8;   // fall through
+    case 6 : b+=((uint32_t)k8[5])<<16;  // fall through
+    case 5 : b+=((uint32_t)k8[4])<<24;  // fall through
     case 4 : a+=k[0]; break;
-    case 3 : a+=((uint32_t)k8[2])<<8;   /* fall through */
-    case 2 : a+=((uint32_t)k8[1])<<16;  /* fall through */
+    case 3 : a+=((uint32_t)k8[2])<<8;   // fall through
+    case 2 : a+=((uint32_t)k8[1])<<16;  // fall through
     case 1 : a+=((uint32_t)k8[0])<<24; break;
     case 0 : return c;
     }
 
-#endif /* !VALGRIND */
+#endif // !VALGRIND
 
-  } else {                        /* need to read the key one byte at a time */
+  } else {                        // need to read the key one byte at a time
     const uint8_t *k = (const uint8_t *)key;
 
-    /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
-    while (length > 12)
-    {
+    //--------------- all but the last block: affect some 32 bits of (a,b,c)
+    while (length > 12) {
       a += ((uint32_t)k[0])<<24;
       a += ((uint32_t)k[1])<<16;
       a += ((uint32_t)k[2])<<8;
@@ -754,12 +768,11 @@ uint32_t hashbig( const void *key, size_t length, uint32_t initval)
       k += 12;
     }
 
-    /*-------------------------------- last block: affect all 32 bits of (c) */
-    switch(length)
-    {
-    /*****************************************************************
-     * NOTE: ALL THE CASE STATEMENTS DO FALL THROUGH
-     ****************************************************************/
+    //-------------------------------- last block: affect all 32 bits of (c)
+    switch(length) {
+    // *****************************************************************
+    // * NOTE: ALL THE CASE STATEMENTS DO FALL THROUGH
+    // *****************************************************************
     case 12: c+=k[11];
     case 11: c+=((uint32_t)k[10])<<8;
     case 10: c+=((uint32_t)k[9])<<16;
@@ -780,5 +793,7 @@ uint32_t hashbig( const void *key, size_t length, uint32_t initval)
   final(a,b,c);
   return c;
 }
+*/
+
 
 
