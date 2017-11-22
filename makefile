@@ -4,9 +4,10 @@
 _MAKEFILE_ABS = $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 _TARGET := $(basename $(notdir $(realpath $(lastword $(_MAKEFILE_ABS)))))
 _CWD = $(_MAKEFILE_ABS)
+TESTS = $(sort $(dir $(wildcard $(CURDIR)/tests/*/)))
 .DEFAULT_GOAL = lib
 $(info target->$(_TARGET) makefile_abs->$(_MAKEFILE_ABS) cwd->$(_MAKEFILE_ABS))
-$(info target->$(_TARGET) makefile_abs->$(_MAKEFILE_ABS) cwd->$(_MAKEFILE_ABS))
+$(info TESTS->$(TESTS))
 #$(info .VARIABLES->[$(.VARIABLES)]) #show all variables
 #$(info CURDIR->[$(CURDIR)])
 
@@ -38,6 +39,7 @@ _dummy := $(shell mkdir -p "$(ODIR)" "$(DEST)")
 
 # link
 lib: $(OBJS)
+	ar -cvqs $(DEST)/lib$(_TARGET).a $(OBJS)
 
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)
@@ -47,7 +49,6 @@ $(ODIR)/%.o: $(SDIR)/%.c
 	gcc -c $(CFLAGS) $(SDIR)/$*.c -o $(ODIR)/$*.o
 	gcc -MM $(CFLAGS) $(SDIR)/$*.c > $(ODIR)/$*.d
 	( echo -n $(ODIR)/ ; cat $(ODIR)/$*.d ) | tee $(ODIR)/$*.d
-	ar -cvqs $(DEST)/lib$(_TARGET).a $(OBJS)
 
 
 # remove compilation products

@@ -32,15 +32,6 @@
 
 #include <stdlib.h>
 
-#include <stdint.h>
-void* uys_malloc_test_fn(size_t size);
-#if UYS_TEST_MALLOC==1
-#define uys_malloc uys_malloc_test_fn
-#else
-#define uys_malloc malloc
-#endif
-void uys_set_malloc_to_fail(int status);
-
 
 /*****************************************************************
  * struct ListElmt, ListElmt

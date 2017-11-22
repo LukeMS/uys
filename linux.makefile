@@ -44,8 +44,13 @@ uninstall:
 gcov:
 	gcc -shared $(LDIR) $(CFLAGS) -fPIC -O0 -fprofile-arcs -ftest-coverage $(SDIR)/*.c -lgcov -o /usr/lib/$(uys)
 
-test:
-	make -C $(CURDIR)/tests/list_test01 --file=$(CURDIR)/linux_test.makefile valgrind
+#All test folders as dependencies
+test: $(TESTS)
+
+#In a multiple target pattern rule ‘$@’ is the name of whichever target caused the rule’s recipe to be run.
+#Run once for each test folder passing its path to the recursive make
+$(TESTS):
+	make -C $@ --file=$(CURDIR)/linux_test.makefile valgrind
 
 
 # pull in dependency info for *existing* .o files

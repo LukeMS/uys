@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "uys_alloc.h"
 #include "list.h"
+
 
 #define TEST_SIZE 100
 
@@ -81,6 +83,15 @@ int main(void) {
         assert(list_rem_next(list, NULL, (void**)&data) == -1);
         assert(data);
         data->val = 9;
+        /*****************************************************************
+         * test: malloc failure on ListElmt allocation
+         ****************************************************************/
+        uys_set_malloc_to_fail(1);
+        assert(list_ins_next(list, NULL, data) != 0);
+        /*****************************************************************
+         * test: malloc success on ListElmt allocation
+         ****************************************************************/
+        uys_set_malloc_to_fail(0);
         assert(list_ins_next(list, NULL, data) == 0);
 
         /*****************************************************************
