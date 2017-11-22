@@ -15,7 +15,8 @@ endif
 # https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
 SRCS := $(wildcard $(SDIR)/*.c)
 OBJS := $(patsubst $(SDIR)/%,$(ODIR)/%,$(patsubst %.c,%.o,$(SRCS)))
-$(info target=lib$(_TARGET).a, SRCS=[$(SRCS)], OBJS=[$(OBJS)])
+TESTS = $(sort $(dir $(wildcard $(CURDIR)/tests/*/)))
+$(info target=lib$(_TARGET).a, SRCS=[$(SRCS)], OBJS=[$(OBJS)], TESTS=[$(TESTS)])
 
 
 clean_filenames := $(ODIR)/*.o $(ODIR)/*.d $(DEST)/lib$(_TARGET).a
@@ -46,12 +47,7 @@ gcov:
 
 #All test folders as dependencies
 test: $(TESTS)
-
-#In a multiple target pattern rule ‘$@’ is the name of whichever target caused the rule’s recipe to be run.
-#Run once for each test folder passing its path to the recursive make
-$(TESTS):
-	make -C $@ --file=$(CURDIR)/linux_test.makefile valgrind
-
+	$(foreach (var1), $(TESTS), make -C $(var1) --file=$(CURDIR)/linux_test.makefile valgrind;)
 
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)

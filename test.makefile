@@ -41,16 +41,21 @@ run: all
 rundrm: all
 	C:/dr_m/bin/drmemory -batch -- ./$(BDIR)/$(_TARGET).exe
 
+lib:
+	make -C ../.. lib
 
 # pull in dependency info for *existing* .o files
 -include $(OBJS:.o=.d)
 
 
 # compile and generate dependency info
-$(ODIR)/%.o: $(SDIR)/%.c
-	make -C ../.. lib
+$(ODIR)/%.o: lib $(SDIR)/%.c
 	gcc -c $(CFLAGS) $(SDIR)/$*.c -o $(ODIR)/$*.o
-	( echo -n $(ODIR)/ ; echo -n `gcc -MM $(CFLAGS) $(SDIR)/$*.c` ; echo -n " " ; echo -n $(LIBS) ) | tee $(ODIR)/$*.d
+	( echo -n $(ODIR)/ ; echo -n `gcc -MM $(CFLAGS) $(SDIR)/$*.c` ; echo -n " " ; echo -n $(LIBS) ) | tr -d '\\\r' > $(ODIR)/$*.d
+#	tr -d '\n' $(ODIR)/$*.d
+#	tr '\n' ' ' $(ODIR)/$*.d
+#sed 'N;s/[\\n\r]//g' $(ODIR)/$*.d
+#sed 'N;s/.\n//' $(ODIR)/$*.d
 
 
 # remove compilation products
