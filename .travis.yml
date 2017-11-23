@@ -16,6 +16,10 @@ addons:
 install:
   - cd $TRAVIS_BUILD_DIR && sudo make --file=linux.makefile install gcov
 
+before_script:
+  - sudo pip install git+https://github.com/LukeMS/pybadgy.git
+  - git clone https://github.com/alobbs/doxy-coverage.git $TRAVIS_BUILD_DIR/doxy-coverage
+
 script:
   - cd $TRAVIS_BUILD_DIR && make --file=linux.makefile test
 
@@ -24,6 +28,8 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
   - cd $TRAVIS_BUILD_DIR/docs
   - ( cat ./Doxyfile ; echo "PROJECT_NUMBER=0.1" ) | doxygen -
+  - $TRAVIS_BUILD_DIR/doxy-coverage/doxy-coverage.py $TRAVIS_BUILD_DIR/docs/xml > $TRAVIS_BUILD_DIR/docs/html/doxy-coverage.txt
+  - python -m pybadgy --doxy $TRAVIS_BUILD_DIR/docs/html/doxy-coverage.txt -o $TRAVIS_BUILD_DIR/docs/html/doxy-coverage.svg
 
 # Deploy using travis builtin GitHub Pages support
 deploy:

@@ -655,6 +655,17 @@ EXTERNAL_SEARCH_ID     =
 # This tag requires that the tag SEARCHENGINE is set to YES.
 EXTRA_SEARCH_MAPPINGS  =
 
+
+#---------------------------------------------------------------------------
+# Configuration options related to the XML output
+#---------------------------------------------------------------------------
+
+# If the GENERATE_XML tag is set to YES, doxygen will generate an XML file that
+# captures the structure of the code including all documentation.
+# The default value is: NO.
+GENERATE_XML           = YES
+
+
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor
 #---------------------------------------------------------------------------

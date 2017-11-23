@@ -2,7 +2,18 @@
 \mainpage UYS - Useful Yet Simple (C libraries collection) 
 
 \htmlonly
-<a href="https://travis-ci.org/LukeMS/uys"><img alt="travis-ci" src="https://travis-ci.org/LukeMS/uys.svg?branch=master"/></a>&nbsp;&nbsp;<a href=https://codecov.io/gh/LukeMS/uys><img alt="codecov" src="https://codecov.io/gh/LukeMS/uys/branch/master/graph/badge.svg"/></a>&nbsp;&nbsp;<a href="https://github.com/LukeMS/uys"><img alt="UYS on github" src="github.png" border="0" width="24" height="24"/></a>
+
+<a href="https://badge.fury.io/gh/LukeMS%2Fuys"><img alt="version_badge" src="https://badge.fury.io/gh/LukeMS%2Fuys.svg"/></a>&nbsp;&nbsp;
+
+<a href="https://travis-ci.org/LukeMS/uys"><img alt="travis-ci" src="https://travis-ci.org/LukeMS/uys.svg?branch=master"/></a>&nbsp;&nbsp;
+
+<a href=https://www.codacy.com/app/LukeMS/uys?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LukeMS/uys&amp;utm_campaign=Badge_Grade><img alt="codacy" src="https://api.codacy.com/project/badge/Grade/cbc2da745aa64cb5944b412eb55f613a"/></a>&nbsp;&nbsp;
+
+<a href=https://codecov.io/gh/LukeMS/uys><img alt="codecov" src="https://codecov.io/gh/LukeMS/uys/branch/master/graph/badge.svg"/></a>&nbsp;&nbsp;
+
+<a href=doxy-coverage.txt><img alt="doxy-coverage" src="doxy-coverage.svg"/></a>&nbsp;&nbsp;
+
+<a href="https://github.com/LukeMS/uys"><img alt="UYS on github" src="github.png" border="0" width="24" height="24"/></a>
 \endhtmlonly
 <hr/>
 <ul>

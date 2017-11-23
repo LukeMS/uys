@@ -8,6 +8,7 @@ bin
 lib
 *.bkp
 docs/coverage
+docs/html
 coverage.info
 
 # Prerequisites
