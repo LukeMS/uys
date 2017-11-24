@@ -1,0 +1,38 @@
+100% - /home/travis/build/LukeMS/uys/src/list.c - (4 of 4)
+100% - /home/travis/build/LukeMS/uys/include/list.h - (14 of 14)
+ 72% - /home/travis/build/LukeMS/uys/include/nhash.h - (8 of 11)
+	 NHashEntry* nhash_get
+	 typedef struct NHashEntry  NHashEntry
+	 void* nhash_pop
+ 41% - /home/travis/build/LukeMS/uys/src/nhash.c - (5 of 12)
+	 NHashEntry* nhash_create_entry
+	 NHashEntry* nhash_get
+	 NHashEntry* nhash_vget
+	 int nhash_vinsert
+	 void nhash_vhash
+	 void* nhash_pop
+	 void* nhash_vremove
+  0% - /home/travis/build/LukeMS/uys/include/lookup3.h - (0 of 2)
+	 uint32_t hashlittle
+	 void hashlittle2
+  0% - /home/travis/build/LukeMS/uys/src/uys_alloc.c - (0 of 3)
+	 int UYS_MAKE_MALLOC_FAIL
+	 void uys_set_malloc_to_fail
+	 void* uys_malloc_test_fn
+  0% - /home/travis/build/LukeMS/uys/include/uys_alloc.h - (0 of 3)
+	 uys_malloc
+	 void uys_set_malloc_to_fail
+	 void* uys_malloc_test_fn
+  0% - /home/travis/build/LukeMS/uys/src/lookup3.c - (0 of 10)
+	 HASH_BIG_ENDIAN
+	 HASH_LITTLE_ENDIAN
+	 VALGRIND
+	 final
+	 hashmask
+	 hashsize
+	 mix
+	 rot
+	 uint32_t hashlittle
+	 void hashlittle2
+
+52% API documentation coverage
